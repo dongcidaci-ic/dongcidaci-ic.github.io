@@ -4,8 +4,7 @@
   icon: "fab fa-github"
 
 - type: xiaohongshu
-  icon: "fas fa-circle"
-  color: "#FF2338"
+  icon: "fab fa-xiaohongshu"
   url: "https://xhslink.com/m/A4MyjZRPDmg"
 
 - type: email
