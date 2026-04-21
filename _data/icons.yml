@@ -1,0 +1,4 @@
+# The site icons configuration
+# Ref: https://github.com/cotes2020/jekyll-theme-chirpy/wiki/Configuration#site-icons
+
+favicon: /favicon.png
