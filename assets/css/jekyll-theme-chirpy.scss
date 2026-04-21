@@ -1,0 +1,26 @@
+---
+---
+
+/* prettier-ignore */
+@use 'main
+{%- if jekyll.environment == "production" -%}
+.bundle
+{%- endif -%}
+';
+
+/* append your custom style below */
+
+/* Xiaohongshu (RED) custom icon - Font Awesome does not include this brand */
+.fa-xiaohongshu {
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.125em;
+    background-image: url('/assets/img/xiaohongshu.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+}
