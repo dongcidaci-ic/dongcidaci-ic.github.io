@@ -4,7 +4,7 @@
   icon: "fab fa-github"
 
 - type: xiaohongshu
-  icon: "fas fa-circle"
+  icon: "assets/img/xiaohongshu.svg"
   url: "https://xhslink.com/m/A4MyjZRPDmg"
 
 - type: email
