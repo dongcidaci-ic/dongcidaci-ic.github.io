@@ -9,12 +9,12 @@ theme: jekyll-theme-chirpy
 lang: en
 
 # Change to your timezone › https://zones.arilyn.cc
-timezone: Asia/Shenzhen
+timezone: Asia/Shanghai
 
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
-title: Blog of dongcidaci # the main title
+title: DongciDaCi # the main title
 
 tagline: (Testing) Digital IC Design Knowledge Sharing # it will display as the subtitle
 
