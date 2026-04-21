@@ -7,7 +7,8 @@ Jekyll::Hooks.register :posts, :post_init do |post|
   commit_num = `"C:\\Program Files\\Git\\bin\\git.exe" rev-list --count HEAD "#{ post.path }"`
 
   if commit_num.to_i > 1
-    lastmod_date = `"C:\\Program Files\\Git\\bin\\git.exe" log -1 --pretty="%ad" --date=iso "#{ post.path }"`
+    # Use Git's output directly instead of relying on tzinfo
+    lastmod_date = `"C:\\Program Files\\Git\\bin\\git.exe" log -1 --pretty="%ad" --date=iso-strict "#{ post.path }"`
     post.data['last_modified_at'] = lastmod_date
   end
 
