@@ -1,10 +1,11 @@
 ---
 # the default layout is 'page'
-layout: About Me
 icon: fas fa-user-circle
 order: 4
 title: About Me
 ---
+
+## Introduction
 Hi! I'm a recent graduate in **Integrated Circuit Science and Engineering**, with a focus on **digital chip design**.
 
 ## My Focus Areas
