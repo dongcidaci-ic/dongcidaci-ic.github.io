@@ -12,15 +12,19 @@
 
 /* Xiaohongshu (RED) custom icon - Font Awesome does not include this brand */
 .fa-xiaohongshu {
+  font-family: inherit !important;
+  font-style: normal !important;
+  display: inline-block !important;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+  background-image: url('/assets/img/xiaohongshu.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+
   &::before {
-    content: '';
-    display: inline-block;
-    width: 1em;
-    height: 1em;
-    vertical-align: -0.125em;
-    background-image: url('/assets/img/xiaohongshu.svg');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+    content: none !important;
+    display: none !important;
   }
 }
