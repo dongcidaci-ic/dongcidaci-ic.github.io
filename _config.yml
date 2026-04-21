@@ -16,7 +16,7 @@ timezone: Asia/Shenzhen
 
 title: Blog of dongcidaci # the main title
 
-tagline: Focusing on Digital IC Knowledge Sharing # it will display as the subtitle
+tagline: Digital IC Design Knowledge Sharing # it will display as the subtitle
 
 description: >- # used by seo meta and the atom feed
   A minimal, responsive and feature-rich Jekyll theme for technical writing.
