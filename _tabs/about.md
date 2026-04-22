@@ -4,23 +4,24 @@ icon: fas fa-user-circle
 order: 4
 title: About
 ---
-# Introduction
+# 👋 Introduction
 
-Hi! I'm a recent graduate in **Integrated Circuit Science and Engineering**, with a focus on **digital chip design**.
+Hi! I'm a recent graduate in **Integrated Circuit Science and Engineering**, with a focus on **digital chip design** 🔧. I currently work at an AI chip fabless company, doing SoC design 🖥️.
 
-## My Focus Areas
+## 🎯 My Focus Areas
 
-- **Digital Chip Design**: Building efficient and high-performance digital circuits
-- **MMU (Memory Management Unit)**: Designing and optimizing memory management systems
-- **NoC (Network-on-Chip)**: Developing scalable on-chip communication architectures
+- 💡 **Digital Chip Design**: Building efficient and high-performance digital circuits
+- 🧠 **MMU (Memory Management Unit)**: Designing and optimizing memory management systems
+- 🌐 **NoC (Network-on-Chip)**: Developing scalable on-chip communication architectures
 
-## What's Coming
+## 📝 What's Coming
 
 I'll be sharing my learning notes, design experiences, and technical insights on these topics. Stay tuned for updates on:
 
-- Chip architecture design
-- Memory hierarchy optimization
-- On-chip network routing algorithms
-- RTL design and verification
+- 🏗️ Chip architecture design
+- 🚌 AMBA bus protocols: AXI, ACE, CHI, and beyond
+- 📦 Memory hierarchy optimization
+- 🔀 On-chip network routing algorithms
+- ✅ RTL design and verification
 
-Thanks for visiting my blog!
+Thanks for visiting my blog! 🎉
