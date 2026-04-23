@@ -13,7 +13,7 @@ This post covers the fundamentals: why incoherence happens, what coherence actua
 
 ---
 
-## 1. The Baseline System
+## 1. 🖥️ The Baseline System
 
 Before we talk about the problem, let's define the system we're reasoning about:
 
@@ -56,7 +56,7 @@ For simplicity, we ignore instruction caches, multi-level private caches, TLBs, 
 
 ---
 
-## 2. The Problem: How Incoherence Arises
+## 2. ⚠️ The Problem: How Incoherence Arises
 
 Incoherence has exactly **one root cause**: multiple actors have access to caches and memory. In most systems, these actors are processor cores (but could also be DMA engines or external devices).
 
@@ -82,7 +82,7 @@ Without a coherence protocol, nothing prevents this. The caches are private. The
 
 ---
 
-## 3. Defining Coherence: Two Invariants
+## 3. 📐 Defining Coherence: Two Invariants
 
 The intuitive notion of "no stale values" is a good starting point, but we need something more precise. The preferred definition of coherence relies on **two invariants**:
 
@@ -117,7 +117,7 @@ The SWMR invariant alone isn't enough. Even if access permissions are correct, t
 
 ---
 
-## 4. Maintaining the Invariants: Invalidate Protocols
+## 4. 🔒 Maintaining the Invariants: Invalidate Protocols
 
 The vast majority of real-world coherence protocols are **invalidate protocols**, designed explicitly to maintain these two invariants.
 
@@ -137,7 +137,7 @@ The key action in step 2 of a write is **invalidation** — the writing core tel
 
 ---
 
-## 5. Coherence Granularity: The Cache Block
+## 5. 📦 Coherence Granularity: The Cache Block
 
 Coherence is maintained at the granularity of a **cache block** (cache line), not individual bytes or words.
 
@@ -152,7 +152,7 @@ This means the SWMR invariant operates at block granularity. If Core 1 is writin
 
 ---
 
-## 6. The Scope of Coherence
+## 6. 🔭 The Scope of Coherence
 
 Two important scope considerations:
 
@@ -178,7 +178,7 @@ The practical takeaway: coherence is a means to an end (implementing the consist
 
 ---
 
-## 7. Coherence ≠ Consistency
+## 7. ⚡ Coherence ≠ Consistency
 
 This distinction is crucial and often confused:
 
@@ -202,7 +202,7 @@ This is why we need both concepts. Coherence handles per-location correctness; c
 
 ---
 
-## Summary
+## 📋 Summary
 
 | Concept | Key Point |
 |---------|-----------|
