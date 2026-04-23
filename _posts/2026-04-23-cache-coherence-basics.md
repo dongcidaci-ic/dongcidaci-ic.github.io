@@ -1,5 +1,5 @@
----
-title: "2.3 Cache Coherence Basics: Why Multiple Cores Need a Protocol"
+﻿---
+title: "2.3 🧩 Cache Coherence Basics: Why Multiple Cores Need a Protocol"
 tags: [Cache, Coherence, MMU, AMBA]
 order: 8
 last_modified_at: 2026-04-23

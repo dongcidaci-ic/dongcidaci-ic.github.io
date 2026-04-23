@@ -1,5 +1,5 @@
----
-title: "2.1&nbsp;&nbsp;Cache Organization – Lines, Sets, and Set-Associative Mapping"
+﻿---
+title: "2.1 🔍 Cache Organization – Lines, Sets, and Set-Associative Mapping"
 date: 2026-04-23
 last_modified_at: 2026-04-23
 categories: [MMU, Cache]

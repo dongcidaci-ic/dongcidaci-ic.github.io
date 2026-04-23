@@ -1,5 +1,5 @@
----
-title: "2.2&nbsp;&nbsp;PLRU Replacement Policy – Hardware Implementation of Pseudo Least Recently Used"
+﻿---
+title: "2.2 🔄 PLRU Replacement Policy – Hardware Implementation of Pseudo Least Recently Used"
 date: 2026-04-23
 last_modified_at: 2026-04-23
 categories: [MMU, Cache]
