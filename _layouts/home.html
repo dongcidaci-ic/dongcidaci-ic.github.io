@@ -247,16 +247,21 @@ layout: default
 
 <script>
 (function() {
-  var btns = document.querySelectorAll('.cat-filter-btn');
-  var cards = document.querySelectorAll('.grid-card');
+  function initFilter() {
+    var container = document.querySelector('.category-filter-bar');
+    if (!container) return;
 
-  btns.forEach(function(btn) {
-    btn.addEventListener('click', function() {
+    // Use event delegation on the filter bar container
+    container.addEventListener('click', function(e) {
+      var btn = e.target.closest('.cat-filter-btn');
+      if (!btn) return;
+
       // Update active button
-      btns.forEach(function(b) { b.classList.remove('active'); });
+      container.querySelectorAll('.cat-filter-btn').forEach(function(b) { b.classList.remove('active'); });
       btn.classList.add('active');
 
       var cat = btn.getAttribute('data-category');
+      var cards = document.querySelectorAll('.grid-card');
 
       cards.forEach(function(card) {
         if (cat === 'all') {
@@ -274,6 +279,13 @@ layout: default
         }
       });
     });
-  });
+  }
+
+  // Run after DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFilter);
+  } else {
+    initFilter();
+  }
 })();
 </script>
