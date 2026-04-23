@@ -5,7 +5,7 @@ categories: [AMBA, AXI]
 tags: [axi5, amba, protocol, credited-transport, valid-ready]
 ---
 
-## 📜 Preface
+## 1. 📜 Preface
 
 AXI5 (IHI0022 Issue L) is the most significant update to the AXI protocol since its inception in 2003. While it introduces several new features — Atomic transaction extensions, CMO enhancements, Memory Tagging Extension (MTE), and more — the most impactful addition is undoubtedly **Credit-Based Transport** 🚀.
 
@@ -24,7 +24,7 @@ This post provides a detailed comparison of the two transport mechanisms.
 
 ---
 
-## 📖 Introduction
+## 2. 📖 Introduction
 
 AXI5 (AMBA 5 AXI Protocol) is the latest on-chip bus protocol specification from ARM (IHI0022 Issue L), defining the communication interface between Managers (Masters) and Subordinates (Slaves). In AXI5, channel data transport supports **two flow control mechanisms**:
 
@@ -35,9 +35,9 @@ This post provides a comparative analysis of both mechanisms.
 
 ---
 
-## 1. 🤝 Valid-Ready Handshake
+## 3. 🤝 Valid-Ready Handshake
 
-### 1.1 Basic Principle
+### 3.1 Basic Principle
 
 Valid-Ready is the classic transport method used since the original AXI specification. The core idea is a **bidirectional handshake**:
 
@@ -58,7 +58,7 @@ READY   ──┘             └───────────────�
           Transfer occurs here
 ```
 
-### 1.2 Key Rules
+### 3.2 Key Rules
 
 | Rule | Description |
 |------|-------------|
@@ -66,7 +66,7 @@ READY   ──┘             └───────────────�
 | ✅ READY may wait for VALID | The receiver is permitted to wait for VALID before asserting READY |
 | 🚫 VALID cannot be deasserted prematurely | Once asserted, VALID must remain HIGH until the transfer completes (VALID && READY) |
 
-### 1.3 Pros and Cons
+### 3.3 Pros and Cons
 
 **👍 Advantages:**
 - Simple to implement, clear semantics
@@ -80,9 +80,9 @@ READY   ──┘             └───────────────�
 
 ---
 
-## 2. 💳 Credit-Based Transport
+## 4. 💳 Credit-Based Transport
 
-### 2.1 Basic Principle
+### 4.1 Basic Principle
 
 Credit-Based Transport is a new mechanism introduced in AXI5 Issue L. The core idea is **receiver pre-allocates credits; transmitter sends based on available credits**:
 
@@ -101,7 +101,7 @@ VALID   ────────────────────┘   └─
 
 **Core constraint:** VALID may only be asserted when the **credit count > 0**; otherwise, VALID must remain LOW.
 
-### 2.2 Credited Flow Control Rules
+### 4.2 Credited Flow Control Rules
 
 | Rule | Description |
 |------|-------------|
@@ -113,7 +113,7 @@ VALID   ────────────────────┘   └─
 
 A critical distinction: credits **cannot be granted and consumed in the same cycle**, which eliminates combinational paths and is highly beneficial for timing closure 🎯.
 
-### 2.3 Resource Planes
+### 4.3 Resource Planes
 
 One of the most significant features of Credit-Based Transport is **Resource Planes (RP)** 🔀. Each channel can be configured with **1–8 Resource Planes**:
 
@@ -124,7 +124,7 @@ One of the most significant features of Credit-Based Transport is **Resource Pla
 
 **Use cases:** deadlock avoidance, QoS traffic separation. For example, assigning high-priority and low-priority traffic to different RPs ensures that high-priority traffic is never blocked by low-priority traffic.
 
-### 2.4 Shared Credits
+### 4.4 Shared Credits
 
 When throughput varies significantly across RPs, shared credits improve buffer utilization 📦:
 
@@ -133,7 +133,7 @@ When throughput varies significantly across RPs, shared credits improve buffer u
 - Shared credits can be used by **any RP**
 - It is recommended to prefer dedicated credits and reserve shared credits for RPs that have exhausted their dedicated pool
 
-### 2.5 PENDING Signal and Clock Gating
+### 4.5 PENDING Signal and Clock Gating
 
 Credit-Based Transport introduces the **PENDING** signal for transfer-level clock gating ⚡:
 
@@ -143,7 +143,7 @@ Credit-Based Transport introduces the **PENDING** signal for transfer-level cloc
 
 ---
 
-## 3. ⚖️ Comparison
+## 5. ⚖️ Comparison
 
 | Feature | Valid-Ready 🤝 | Credit-Based 💳 |
 |---------|-------------|--------------|
@@ -160,7 +160,7 @@ Credit-Based Transport introduces the **PENDING** signal for transfer-level cloc
 
 ---
 
-## 4. 🤔 How to Choose?
+## 6. 🤔 How to Choose?
 
 **Use Valid-Ready when:**
 - 📎 Simple point-to-point connections
@@ -176,7 +176,7 @@ Credit-Based Transport introduces the **PENDING** signal for transfer-level cloc
 
 ---
 
-## 5. 🎯 Conclusion
+## 7. 🎯 Conclusion
 
 AXI5 retains the classic Valid-Ready handshake while introducing Credit-Based Transport — a significant evolution for high-performance SoC design. The credit mechanism improves timing by eliminating combinatic paths, Resource Planes provide traffic isolation, Shared Credits optimize buffer utilization, and the PENDING signal enables fine-grained clock gating.
 
