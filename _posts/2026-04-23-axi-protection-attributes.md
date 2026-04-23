@@ -1,5 +1,5 @@
----
-title: "1.1.3&nbsp;&nbsp;AXI Protection Attributes – From AxPROT to AxPAS"
+﻿---
+title: "1.3&nbsp;&nbsp;AXI Protection Attributes – From AxPROT to AxPAS"
 date: 2026-04-23
 last_modified_at: 2026-04-23
 order: 3

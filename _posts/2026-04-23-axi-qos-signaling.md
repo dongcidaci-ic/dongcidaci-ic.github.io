@@ -1,5 +1,5 @@
----
-title: "1.1.4&nbsp;&nbsp;AXI QoS Signaling – Priority, Acceptance and System-Level Coordination"
+﻿---
+title: "1.4&nbsp;&nbsp;AXI QoS Signaling – Priority, Acceptance and System-Level Coordination"
 date: 2026-04-23
 last_modified_at: 2026-04-23
 order: 4

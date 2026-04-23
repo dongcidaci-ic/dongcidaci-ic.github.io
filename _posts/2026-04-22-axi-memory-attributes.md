@@ -1,5 +1,5 @@
----
-title: "1.1.2&nbsp;&nbsp;AXI Memory Attributes – AxCACHE Decoded"
+﻿---
+title: "1.2&nbsp;&nbsp;AXI Memory Attributes – AxCACHE Decoded"
 date: 2026-04-22
 last_modified_at: 2026-04-22
 order: 2
