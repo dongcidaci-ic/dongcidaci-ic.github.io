@@ -1,11 +1,12 @@
 ---
-title: "PLRU Replacement Policy – Hardware Implementation of Pseudo Least Recently Used"
+title: "2.2&nbsp;&nbsp;PLRU Replacement Policy – Hardware Implementation of Pseudo Least Recently Used"
 date: 2026-04-23
 last_modified_at: 2026-04-23
 categories: [MMU, Cache]
 tags: [plru, replacement-policy, tlb, cache, hardware, rtl]
 password: 190625
 password_hash: 56d754f1
+order: 7
 ---
 
 ## 1. 🧭 Introduction
