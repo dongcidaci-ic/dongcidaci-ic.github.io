@@ -152,25 +152,24 @@ script_includes:
 
   <script>
   (function() {
-    // SHA-256 hash of the password for verification
-    var PASSWORD_HASH = '{% if page.password_hash %}{{ page.password_hash }}{% else %}placeholder{% endif %}';
+    var EXPECTED = '{% if page.password_hash %}{{ page.password_hash }}{% else %}{% endif %}';
 
-    async function sha256(message) {
-      const msgBuffer = new TextEncoder().encode(message);
-      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    function simpleHash(str) {
+      var h = 0;
+      for (var i = 0; i < str.length; i++) {
+        var c = str.charCodeAt(i);
+        h = ((h << 5) - h) + c;
+        h = h & h;
+      }
+      return h.toString(16);
     }
 
-    async function verify() {
+    function verify() {
       var input = document.getElementById('password-input').value;
-      var hash = await sha256(input);
-
-      if (hash === PASSWORD_HASH) {
+      if (simpleHash(input) === EXPECTED) {
         document.getElementById('password-gate').style.display = 'none';
         document.getElementById('encrypted-content').style.display = 'block';
         document.getElementById('password-error').style.display = 'none';
-        // Save session
         sessionStorage.setItem('unlocked_' + window.location.pathname, '1');
       } else {
         document.getElementById('password-error').style.display = 'block';
@@ -179,7 +178,6 @@ script_includes:
       }
     }
 
-    // Check if already unlocked in this session
     if (sessionStorage.getItem('unlocked_' + window.location.pathname)) {
       document.getElementById('password-gate').style.display = 'none';
       document.getElementById('encrypted-content').style.display = 'block';

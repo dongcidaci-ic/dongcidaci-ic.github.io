@@ -5,7 +5,7 @@ last_modified_at: 2026-04-23
 categories: [MMU, Cache]
 tags: [plru, replacement-policy, tlb, cache, hardware, rtl]
 password: 190625
-password_hash: e681c0a43cc6c85d72687217cd61e6886cab33a7d8999212cec379b3c6ebe259
+password_hash: 56d754f1
 ---
 
 ## 1. 🧭 Introduction
