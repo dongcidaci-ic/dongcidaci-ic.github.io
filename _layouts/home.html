@@ -146,6 +146,12 @@ layout: default
                   <span>{{ site.data.locales[lang].post.pin_prompt }}</span>
                 </div>
               {% endif %}
+
+              {% if post.password %}
+                <div class="ms-1">
+                  <i class="fas fa-lock fa-fw"></i>
+                </div>
+              {% endif %}
             </div>
             <!-- .post-meta -->
           </div>
