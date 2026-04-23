@@ -1,6 +1,8 @@
 ---
 title: "1.1.1&nbsp;&nbsp;AXI5 Transport Mechanisms – Valid-Ready Handshake vs Credit-Based Transport"
 date: 2026-04-22
+last_modified_at: 2026-04-22
+order: 1
 categories: [AMBA, AXI]
 tags: [axi5, amba, protocol, credited-transport, valid-ready]
 ---

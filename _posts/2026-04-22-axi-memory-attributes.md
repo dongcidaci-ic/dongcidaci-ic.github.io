@@ -1,6 +1,8 @@
 ---
 title: "1.1.2&nbsp;&nbsp;AXI Memory Attributes – AxCACHE Decoded"
 date: 2026-04-22
+last_modified_at: 2026-04-22
+order: 2
 categories: [AMBA, AXI]
 tags: [axi, cache, memory-attributes, axcache]
 ---
@@ -199,7 +201,40 @@ This is the key difference from Write-Through: Write-Back **does not require wri
 
 ---
 
-## 6. 🆚 Side-by-Side Comparison
+## 6. ⚠️ Mismatched Memory Attributes
+
+In a multi-manager system, different Managers may access the **same memory region** with different AxCACHE attributes. The protocol allows this, but with **strict rules** to maintain coherency 🔒
+
+### 6.1 Cacheability Must Be Consistent
+
+All Managers accessing the same memory region must have a **consistent view of cacheability** at every level of hierarchy:
+
+- **If the address region is Non-cacheable** → all Managers must use transactions with **both AxCACHE[3:2] deasserted** (i.e., AxCACHE[3:2] = 0b00)
+- **If the address region is Cacheable** → all Managers must use transactions with **either of AxCACHE[3:2] asserted** (i.e., AxCACHE[3:2] ≠ 0b00)
+
+> 💡 **Why this matters:** If one Manager treats a region as cacheable while another treats it as non-cacheable, the non-cacheable Manager bypasses the cache and reads stale data directly from memory — **coherency is lost** 💥
+
+### 6.2 Other Rules for Mismatched Attributes
+
+| Rule | Description |
+|------|-------------|
+| Different allocation hints are OK | Managers can use different Read-Allocate / Write-Allocate recommendations for the same region |
+| Device access to NC region is OK | If a region is Normal Non-cacheable, a Manager **can** access it using Device memory transactions |
+| Stricter Bufferable is OK | If a region is Bufferable, a Manager can use Non-bufferable transactions (requiring response from final destination) |
+
+### 6.3 Changing Memory Attributes
+
+When software needs to change the memory type for a region (e.g., from Write-Through to Normal Non-cacheable), a **defined process** must be followed:
+
+1. **All Managers stop** accessing the region 🛑
+2. **One Manager** performs cache maintenance operations 🧹
+3. **All Managers restart** accessing the region with the **new attributes** ✅
+
+> ⚠️ Skipping this process can cause **software protocol errors** — data corruption, coherency loss, or even system deadlock!
+
+---
+
+## 7. 🆚 Side-by-Side Comparison
 
 | Feature | Device NB | Device B | NC NB | NC B | WT | WB |
 |---------|-----------|----------|-------|------|----|----|
@@ -213,7 +248,7 @@ This is the key difference from Write-Through: Write-Back **does not require wri
 
 ---
 
-## 7. 🎯 Typical Use Cases
+## 8. 🎯 Typical Use Cases
 
 | Scenario | Recommended Type | AxCACHE (R/W) | Why? |
 |----------|-----------------|---------------|------|
@@ -226,7 +261,7 @@ This is the key difference from Write-Through: Write-Back **does not require wri
 
 ---
 
-## 8. 📝 Key Takeaways
+## 9. 📝 Key Takeaways
 
 1. **AxCACHE[3:2] are swapped between read and write** — this is the #1 source of bugs! 🐛
 2. **Device memory is always Non-modifiable** — interconnects cannot split, merge, or prefetch these transactions
