@@ -46,9 +46,31 @@ layout: default
   {% endfor %}
 {% endif %}
 
-<div id="post-list" class="flex-grow-1 px-xl-1">
+<!-- Collect all categories for filter tabs -->
+{% assign all_categories = '' | split: '' %}
+{% for post in all_normal %}
+  {% for cat in post.categories %}
+    {% assign all_categories = all_categories | push: cat %}
+  {% endfor %}
+{% endfor %}
+{% assign unique_categories = all_categories | uniq | sort %}
+
+<div class="category-filter-bar">
+  <button class="cat-filter-btn active" data-category="all">All</button>
+  {% for cat in unique_categories %}
+    <button class="cat-filter-btn" data-category="{{ cat | downcase | replace: ' ', '-' }}">{{ cat }}</button>
+  {% endfor %}
+</div>
+
+<div id="post-list" class="post-grid">
   {% for post in posts %}
-    <article class="card-wrapper card">
+    {% assign cat_slugs = '' | split: '' %}
+    {% for cat in post.categories %}
+      {% assign cat_slug = cat | downcase | replace: ' ', '-' %}
+      {% assign cat_slugs = cat_slugs | push: cat_slug %}
+    {% endfor %}
+    {% assign cat_classes = cat_slugs | join: ' ' %}
+    <article class="card-wrapper card grid-card" data-categories="{{ cat_classes }}">
       <a href="{{ post.url | relative_url }}" class="post-preview row g-0 flex-md-row-reverse">
         {% assign card_body_col = '12' %}
 
@@ -138,3 +160,114 @@ layout: default
 {% if paginator.total_pages > 1 %}
   {% include post-paginator.html %}
 {% endif %}
+
+<style>
+/* Category filter bar */
+.category-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem 0;
+}
+
+.cat-filter-btn {
+  padding: 0.35rem 1rem;
+  border: 1px solid var(--border-color, #dee2e6);
+  border-radius: 2rem;
+  background: transparent;
+  color: var(--text-color, #333);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.cat-filter-btn:hover {
+  border-color: var(--btn-bg, #2a4088);
+  color: var(--btn-bg, #2a4088);
+}
+
+.cat-filter-btn.active {
+  background: var(--btn-bg, #2a4088);
+  color: var(--btn-text, #fff);
+  border-color: var(--btn-bg, #2a4088);
+}
+
+/* Two-column grid */
+.post-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .post-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.grid-card {
+  margin-bottom: 0 !important;
+}
+
+.grid-card[data-hidden="true"] {
+  display: none;
+}
+
+/* Card tweaks for grid mode */
+.grid-card .card-body {
+  padding: 1rem;
+}
+
+.grid-card .card-title {
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.grid-card .card-text {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.grid-card .post-meta {
+  font-size: 0.8rem;
+}
+</style>
+
+<script>
+(function() {
+  var btns = document.querySelectorAll('.cat-filter-btn');
+  var cards = document.querySelectorAll('.grid-card');
+
+  btns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      // Update active button
+      btns.forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+
+      var cat = btn.getAttribute('data-category');
+
+      cards.forEach(function(card) {
+        if (cat === 'all') {
+          card.removeAttribute('data-hidden');
+          card.style.display = '';
+        } else {
+          var cats = card.getAttribute('data-categories') || '';
+          if (cats.indexOf(cat) !== -1) {
+            card.removeAttribute('data-hidden');
+            card.style.display = '';
+          } else {
+            card.setAttribute('data-hidden', 'true');
+            card.style.display = 'none';
+          }
+        }
+      });
+    });
+  });
+})();
+</script>
