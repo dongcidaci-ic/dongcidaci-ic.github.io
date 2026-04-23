@@ -74,14 +74,44 @@ The only allowed AxCACHE change for Non-modifiable: Bufferable → Non-bufferabl
 
 These bits provide **allocation hints** to the memory system. They are recommendations, not hard requirements 💡
 
-| Allocate | Other Allocate | Meaning |
-|----------|---------------|---------|
-| 0 | 0 | No Allocate — not expected to be accessed again, cache lookup **not required** |
-| 1 | 0 | Allocate — data might already be cached, **lookup required**, recommended to allocate |
-| 0 | 1 | Other Allocate — data might be cached, **lookup required**, but NOT recommended to allocate |
-| 1 | 1 | Both — lookup required, allocation recommended from both read and write perspectives |
+> ⚠️ **Critical Note:** The Allocate and Other Allocate bits are in **different positions** for read and write requests!
+>
+> | Bit | AWCACHE (Write) | ARCACHE (Read) |
+> |-----|-----------------|----------------|
+> | [2] | **Other Allocate** | **Allocate** |
+> | [3] | **Allocate** | **Other Allocate** |
+>
+> This swap is **by design** — because Allocate means **Read-Allocate** and Other Allocate means **Write-Allocate**, so each bit naturally falls into the position relevant to its transaction direction!
 
-**Key distinction:** When Allocate = 1, the component recommends caching this line for future use. When Other Allocate = 1, the component says "it might be cached, look it up, but I don't think it'll be reused."
+#### What do they mean?
+
+| Allocate (Read-Allocate) | Other Allocate (Write-Allocate) | Meaning |
+|--------------------------|--------------------------------|----------|
+| 0 | 0 | No Allocate — not expected to be accessed again, cache lookup **not required** |
+| 1 | 0 | Read-Allocate — data might already be cached, **lookup required**, recommended to allocate on **read** |
+| 0 | 1 | Write-Allocate — data might be cached, **lookup required**, recommended to allocate on **write** |
+| 1 | 1 | Read + Write Allocate — lookup required, allocation recommended from **both** read and write perspectives |
+
+#### Why the swap? Read-Allocate vs Write-Allocate explained
+
+The naming makes perfect sense once you understand the intent:
+
+- **Allocate = Read-Allocate** 📖 — "When I issue this transaction, I'm interested in **reading** this data. Please allocate a cache line so future reads hit the cache."
+  - For **read requests** (ARCACHE): Allocate is at bit [2] — the **lower** of the two cache hint bits
+  - For **write requests** (AWCACHE): Allocate is at bit [3] — moved to the **higher** position
+
+- **Other Allocate = Write-Allocate** ✏️ — "When I issue this transaction, I'm interested in **writing** to this location. Please allocate a cache line so the write can be absorbed by the cache."
+  - For **write requests** (AWCACHE): Other Allocate is at bit [2] — the **lower** of the two cache hint bits
+  - For **read requests** (ARCACHE): Other Allocate is at bit [3] — moved to the **higher** position
+
+The key insight: **each "own" allocate bit sits at the lower position [2], while the "other" bit is at [3]**. This makes the encoding more intuitive when you think of it as Read-Allocate / Write-Allocate instead of Allocate / Other-Allocate 🧠
+
+| Memory Type | Read-Allocate (Allocate) | Write-Allocate (Other Allocate) |
+|-------------|--------------------------|--------------------------------|
+| No-Allocate | ❌ Not recommended | ❌ Not recommended |
+| Read-Allocate | ✅ Recommended | ❌ Not recommended |
+| Write-Allocate | ❌ Not recommended | ✅ Recommended |
+| Read + Write Allocate | ✅ Recommended | ✅ Recommended |
 
 ---
 
