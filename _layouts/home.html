@@ -281,11 +281,19 @@ layout: default
     });
   }
 
-  // Run after DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initFilter);
-  } else {
+  // Try immediately, then on DOMContentLoaded, then on load as fallback
+  window.__filterInitCalled = true;
+  if (document.querySelector('.category-filter-bar')) {
+    window.__filterInitMethod = 'immediate';
     initFilter();
+  } else {
+    document.addEventListener('DOMContentLoaded', function() {
+      if (document.querySelector('.category-filter-bar')) {
+        initFilter();
+      } else {
+        window.addEventListener('load', initFilter);
+      }
+    });
   }
 })();
 </script>
