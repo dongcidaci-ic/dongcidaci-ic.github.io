@@ -202,6 +202,88 @@ This is why we need both concepts. Coherence handles per-location correctness; c
 
 ---
 
+## 8. 🔀 The Four Reorderings: What Each Consistency Model Allows
+
+Consistency models differ in **which reorderings they permit**. Understanding these four reorderings is the key to understanding the entire SC → TSO → Relaxed spectrum.
+
+**What does "reordering" mean?** When a core executes Op A then Op B in program order, but *another core* observes the effects of B before A — that's a reordering. The core itself always sees its own operations in program order; the issue is how other cores perceive them.
+
+### Store → Store Reordering
+
+```
+Core 1:  S1: store data = NEW
+         S2: store flag  = SET
+
+Core 2:  L1: r1 = flag → SET
+         L2: r2 = data → OLD    ← flag written, but data hasn't arrived yet!
+```
+
+**Why it happens:** Stores go into a write buffer before reaching the cache. If the buffer doesn't guarantee FIFO ordering — or if stores to different cache lines are merged — S2 can reach the cache before S1.
+
+**Allowed by:** Relaxed (ARM, RISC-V, PowerPC)
+**Forbidden by:** SC, TSO
+
+### Load → Load Reordering
+
+```
+Core 1:  S1: store data = NEW
+         S2: store flag  = SET
+
+Core 2:  L1: r1 = flag    (cache miss → waiting...)
+         L2: r2 = data    (cache hit → executes first!)
+
+Result: r2 = OLD, r1 = SET   ← sees flag but not data
+```
+
+**Why it happens:** Out-of-order execution. If L1 misses in the cache but L2 hits, the processor may execute L2 first. From another core's perspective, the loads appear reordered.
+
+**Allowed by:** Relaxed
+**Forbidden by:** SC, TSO
+
+### Store → Load Reordering ⭐ The Most Important One
+
+```
+Core 1:  S1: store A = 1
+         L1: load  r = B
+
+Core 2:  S2: store B = 1
+         L2: load  r = A
+
+If S→L reordered: both cores read 0 — each thinks the other hasn't written yet!
+```
+
+**Why it happens:** The **store buffer**. S1 writes A=1 into the store buffer (not yet in cache), then L1 reads B directly from cache — it doesn't wait for the buffer to drain. From Core 2's perspective, S1 hasn't happened yet when L1 executes.
+
+This is the **only reordering TSO allows**. It's also the most commonly encountered pitfall on x86. Programmers must insert `MFENCE` or use locked instructions when this reordering is problematic.
+
+**Allowed by:** TSO, Relaxed
+**Forbidden by:** SC
+
+### Load → Store Reordering
+
+```
+Core 1:  L1: load  r = A    (cache miss → waiting...)
+         S1: store B = r    (enters write buffer → takes effect first!)
+```
+
+**Why it happens:** When a load misses, the processor doesn't stall. It lets subsequent stores enter the write buffer. From another core's perspective, S1 appears to happen before L1.
+
+**Allowed by:** Relaxed
+**Forbidden by:** SC, TSO
+
+### Summary Table
+
+| Reordering | SC | TSO | Relaxed | Hardware Cause |
+|------------|----|-----|---------|---------------|
+| Store → Store | ❌ | ❌ | ✅ | Write buffer not FIFO / store merging |
+| Load → Load | ❌ | ❌ | ✅ | Out-of-order execution (miss → hit reordering) |
+| Store → Load | ❌ | ✅ | ✅ | **Store buffer** (write not yet visible) |
+| Load → Store | ❌ | ❌ | ✅ | Load miss lets store enter buffer first |
+
+The core intuition: **all reorderings exist because hardware doesn't want to wait** — for the store buffer to drain, for cache misses to resolve. The more a model allows the hardware to skip waiting, the higher the performance, but the more careful the programmer must be.
+
+---
+
 ## 📋 Summary
 
 | Concept | Key Point |
@@ -212,5 +294,7 @@ This is why we need both concepts. Coherence handles per-location correctness; c
 | Invalidate protocol | Writer invalidates all other copies; dominates in practice |
 | Granularity | Cache block (typically 64 bytes) |
 | Coherence ≠ Consistency | Coherence = per-location; Consistency = cross-location ordering |
+| Four reorderings | SC forbids all; TSO allows only S→L (store buffer); Relaxed allows all |
+| Reordering root cause | Hardware avoids waiting (store buffer, cache miss, out-of-order execution) |
 
 The next post will dive into snooping coherence protocols — how the SWMR invariant is actually implemented in hardware with MESI/MOESI state machines and a broadcast interconnect.
