@@ -298,3 +298,11 @@ The core intuition: **all reorderings exist because hardware doesn't want to wai
 | Reordering root cause | Hardware avoids waiting (store buffer, cache miss, out-of-order execution) |
 
 The next post will dive into snooping coherence protocols — how the SWMR invariant is actually implemented in hardware with MESI/MOESI state machines and a broadcast interconnect.
+
+---
+
+📖 **Reference:** Daniel J. Sorin, Mark D. Hill, and David A. Wood, *A Primer on Memory Consistency and Cache Coherence*, 2nd Edition, 2020, Chapter 2 (Coherence Basics) & Chapter 3 (Sequential Consistency)
+
+---
+
+👍 If you found this post helpful, give it a like! Questions and discussions are welcome in the comments 💬
