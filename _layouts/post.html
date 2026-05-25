@@ -220,12 +220,46 @@ script_includes:
   }
   </style>
 
+  <style>
+  #gt-wrapper {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    background: var(--card-bg, #fff);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    padding: 6px 10px;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+  }
+  #gt-wrapper:hover {
+    opacity: 1;
+  }
+  </style>
+
   {% else %}
   <!-- Normal content -->
   <div class="content">
     {{ content }}
   </div>
   {% endif %}
+
+  <!-- Google Translate Widget -->
+  <div id="gt-wrapper">
+    <div id="google_translate_element"></div>
+  </div>
+  <script>
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'en',
+      includedLanguages: 'en,zh-CN',
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+      autoDisplay: false
+    }, 'google_translate_element');
+  }
+  </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
   <div class="post-tail-wrapper text-muted">
     <!-- categories -->
