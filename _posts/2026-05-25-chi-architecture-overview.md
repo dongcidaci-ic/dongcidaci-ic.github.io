@@ -1,5 +1,5 @@
 ---
-title: "2.3 🏛️ CHI Architecture Overview: Three Layers, Four Nodes, Seven States"
+title: "2.3 🏛️ CHI Architecture Overview: Layers, Nodes, States, and Transactions"
 tags: [CHI, AMBA, Cache, Coherence]
 order: 9
 last_modified_at: 2026-05-25
@@ -201,6 +201,61 @@ This contrasts with **Write-Update** (broadcast new values to all holders). Writ
 
 ---
 
+## 10. 🏷️ Transaction Classification: The Naming Rules
+
+The CHI spec defines **60+ transactions**, but they're all built from a small set of compositional naming rules:
+
+| Modifier | Meaning |
+|----------|---------|
+| **NoSnp** | No Snoop required (non-coherent) |
+| **Once** | Read once, no caching |
+| **Clean** | Want Clean state |
+| **Shared** | Want Shared state |
+| **Unique** | Want Unique state (exclusive) |
+| **Ptl** | Partial write (<64B) |
+| **Full** | Complete 64-byte write |
+| **Zero** | Write all zeros (no data payload!) |
+| **Back** | Write-back (eviction) |
+| **Stash** | Push data to another RN |
+| **Fwd** | Allow direct data forwarding (DCT) |
+
+Once you know these building blocks, `WriteUniquePtlCleanSh` is no longer scary: it's a **coherent partial write** that also **cleans and shares** other copies.
+
+### Five Transactions You Must Know
+
+You can understand the vast majority of CHI coherence flows with just five transactions:
+
+| # | Transaction | When to Use |
+|---|-------------|-------------|
+| 1 | **ReadShared** | I want to read, others can keep copies |
+| 2 | **ReadUnique** | I want to write, need exclusive ownership |
+| 3 | **WriteUnique** | Write + coherence in one step |
+| 4 | **SnpUnique** | Home asks RN to invalidate and surrender data |
+| 5 | **CleanUnique** | Upgrade Shared→Unique without data transfer |
+
+**Decision flowchart**:
+
+```
+I want to READ data
+  ├── Just reading → ReadShared ⭐
+  ├── Preparing to write → ReadUnique ⭐
+  └── Just peeking → ReadOnce
+
+I want to WRITE data
+  ├── Coherent write, one step → WriteUnique ⭐
+  ├── Non-coherent address → WriteNoSnp
+  └── Evicting dirty line → WriteBack
+
+I want to CHANGE permissions (no data)
+  ├── Shared → Unique → CleanUnique ⭐
+  └── Evict from cache → Evict
+
+I need atomic operation → AtomicCompare (CAS)
+Home asks RN → SnpUnique ⭐ (+ Snp*Fwd for DCT)
+```
+
+---
+
 ## Summary
 
 | Concept | Key Point |
@@ -211,6 +266,7 @@ This contrasts with **Write-Update** (broadcast new values to all holders). Writ
 | Seven States | I/UC/UD/UDP/SC/SD/UCE; SD = MOESI's O |
 | Three Optimizations | DMT (memory→RN), DCT (cache→RN), DWT (RN→memory) |
 | Coherence Model | Write-Invalidate, 64B granularity, lazy writeback |
+| Transactions | Read/Write/Dataless/Atomic/Snoop — master five, understand all |
 
 📖 **Reference:** ARM IHI 0050, *AMBA CHI Architecture Specification*, Issue H, Chapter B1 Introduction
 
